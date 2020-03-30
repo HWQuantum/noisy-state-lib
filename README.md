@@ -1,6 +1,8 @@
 # noisy-state-lib
 A storage place for the functions to do with noisy states, etc...
 
+## Using with pip
+To use with pip, follow [this](https://adamj.eu/tech/2019/03/11/pip-install-from-a-git-repository/) guide.
 
 ## Using with Nix
 Here's an example of a minimal `shell.nix` file to set up an environment with this library
