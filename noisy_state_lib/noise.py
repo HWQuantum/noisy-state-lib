@@ -1,3 +1,6 @@
+"""Contains functions related to noise on states
+"""
+
 import numpy as np
 
 def mixed_noise_state(rho, p):
