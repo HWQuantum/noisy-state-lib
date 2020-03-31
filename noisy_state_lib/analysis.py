@@ -41,3 +41,41 @@ def conditional_entropy(data):
     d = np.log2(data / p_x)
     non_zero = np.where((np.invert(np.isnan(d))) & (np.invert(np.isinf(d))))
     return -(data[non_zero] * d[non_zero]).sum()
+
+
+def v_j(v, a, d):
+    """The vth basis vector with measurement setting a in dimension d
+    """
+    return 1 / np.sqrt(d) * np.array(
+        [np.exp(2 * np.pi * j * 1j / d * (v + a)) for j in range(d)])
+
+
+def w_j(w, b, d):
+    """The wth basis vector with measurement setting b in dimension d
+    """
+    return v_j(-w, b, d)
+
+
+def p_single(k, l, a, b, d):
+    """Generate the operator P(A=k, B=l) in dimension d
+    """
+    prod = np.kron(v_j(k, a, d), w_j(l, b, d))
+    return np.tensordot(prod, prod.conj(), 0)
+
+
+def p_mult(a, b, k, d):
+    """Generate the operator P(A=B+k) in dimension d
+    """
+    return np.sum([p_single(i + k, i, a, b, d) for i in range(d)], axis=0)
+
+
+def s(a_0, a_1, b_0, b_1, d):
+    """Bell operator for dimension d with measurement settings a_0, a_1, b_0, b_1
+    """
+    return np.sum([(1 - 2 * k / (d - 1)) *
+                   (p_mult(a_0, b_0, k, d) + p_mult(a_1, b_0, -k - 1, d) +
+                    p_mult(a_1, b_1, k, d) + p_mult(a_0, b_1, -k, d) -
+                    (p_mult(a_0, b_0, -k - 1, d) + p_mult(a_1, b_0, k, d) +
+                     p_mult(a_1, b_1, -k - 1, d) + p_mult(a_0, b_1, k + 1, d)))
+                   for k in range(int(d / 2))],
+                  axis=0)
