@@ -24,3 +24,56 @@ def basis(dim, a, n):
             for m in np.linspace(-j, j, dim)
         ],
                                            dtype=np.complex128)
+
+
+def transform_matrix(dim, mub):
+    """Generate the transformation matrix from computational MUB 
+    to MUB=mub
+    """
+    return np.array([basis(dim, mub, i) for i in range(dim)]).T
+
+
+def dual_transform(dim, mub):
+    """Generate the transformation matrix to move two particles from the computational
+    MUB to MUB mub
+    """
+    m = transform_matrix(dim, mub)
+    return np.kron(m, m)
+
+
+def correct_parity(coinc):
+    """Correct the coincidence matrix so that the 
+    large components are along the diagonal
+    """
+    return np.flip((np.roll(coinc, -1, axis=1)), axis=1)
+
+
+def coincidences_vec(d, width, p):
+    """Get the coincidence matrices in MUB 0 and MUB 1 for the values
+    of d, width and werner state p
+    returns a matrix [width [p [MUB0, MUB1]]]
+    """
+
+    t = dual_transform(d, 1)
+    mub_t = (t, t.conj().T)
+    if type(width) != np.ndarray:
+        if type(width) == list:
+            width = np.array(width)
+        else:
+            width = np.array([width])
+    if type(p) != np.ndarray:
+        if type(p) == list:
+            p = np.array(p)
+        else:
+            p = np.array([p])
+
+    coincidences = np.zeros((len(width), len(p), 2, d, d))
+
+    for i, w in enumerate(width):
+        for j, prob in enumerate(p):
+            comp = isotropic_state(density_matrix(d, w), prob)
+            coincidences[i, j, 0] = comp.diagonal().reshape((d, d))
+            coincidences[i, j, 1] = correct_parity(
+                (mub_t[0] @ comp @ mub_t[1]).diagonal().reshape((d, d)))
+
+    return np.abs(coincidences)
