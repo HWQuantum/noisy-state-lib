@@ -8,7 +8,9 @@ def spiral_rho(d, sigma):
     """Generate a normalised spiral density matrix with gaussian width sigma and dimension d
     """
     d_lim = d // 2
-    rho = np.diag(np.exp(-(np.linspace(-d_lim, d_lim, d))**2 / (2 * sigma**2)))
+    # rho = np.diag(np.exp(-(np.linspace(-d_lim, d_lim, d))**2 / (2 * sigma**2)))
+    v = np.exp(-(np.linspace(-d_lim, d_lim, d))**2 / (2 * sigma**2))
+    rho = np.outer(v, v.conj())
     return rho / rho.diagonal().sum()
 
 def _n_particle_func(reducing_func, d, sigma, N=2):
