@@ -3,7 +3,7 @@ import setuptools
 with open("README.md", "r") as fh:
     long_description = fh.read()
 
-install_requires = ["numpy>=1.15"]
+install_requires = ["numpy>=1.15", "numba>=0.42"]
     
 setuptools.setup(
     name="noisy-state-lib-maxastyler", # Replace with your own username
