@@ -4,25 +4,25 @@
 import numpy as np
 
 
-def quantum_contrast(mat):
+def quantum_contrast(matrix):
     """Calculate the quantum contrast from the diagonals
     of a coincidence matrix.
     The quantum contrast is the average of the diagonal divided by the average of the off-diagonal
 
     The input should be a coincidence matrix
     """
-    off_diag_avg = (rho.sum() - rho.diagonal().sum()) / (rho.shape[0] *
-                                                         (rho.shape[1] - 1))
-    return np.average(rho.diagonal()) / off_diag_avg
+    off_diag_avg = (matrix.sum() - matrix.diagonal().sum()) / (matrix.shape[0] *
+                                                         (matrix.shape[1] - 1))
+    return np.average(matrix.diagonal()) / off_diag_avg
 
 
-def visibility(mat):
+def visibility(matrix):
     """Calculate the visibility of the state. 
     The visibility is the sum of the diagonal divided by the sum over the whole coincidence matrix
 
     The input should be a coincidence matrix
     """
-    return rho.diagonal().sum() / rho.sum()
+    return matrix.diagonal().sum() / rho.sum()
 
 
 def all_mub_fidelity_bound(data):
