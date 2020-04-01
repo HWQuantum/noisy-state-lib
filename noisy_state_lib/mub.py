@@ -41,14 +41,6 @@ def dual_transform(dim, mub):
     return np.kron(m, m.conj())
 
 
-def correct_parity(coinc):
-    """Correct the coincidence matrix so that the 
-    large components are along the diagonal
-    THIS IS A DEPRECATED FUNCTION
-    """
-    return np.flip((np.roll(coinc, -1, axis=1)), axis=1)
-
-
 def coincidences_vec(d, width, p):
     """Get the coincidence matrices in MUB 0 and MUB 1 for the values
     of d, width and werner state p

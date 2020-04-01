@@ -11,8 +11,9 @@ def quantum_contrast(matrix):
 
     The input should be a coincidence matrix
     """
-    off_diag_avg = (matrix.sum() - matrix.diagonal().sum()) / (matrix.shape[0] *
-                                                         (matrix.shape[1] - 1))
+    off_diag_avg = (matrix.sum() -
+                    matrix.diagonal().sum()) / (matrix.shape[0] *
+                                                (matrix.shape[1] - 1))
     return np.average(matrix.diagonal()) / off_diag_avg
 
 
