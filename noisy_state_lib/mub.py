@@ -44,6 +44,7 @@ def dual_transform(dim, mub):
 def correct_parity(coinc):
     """Correct the coincidence matrix so that the 
     large components are along the diagonal
+    THIS IS A DEPRECATED FUNCTION
     """
     return np.flip((np.roll(coinc, -1, axis=1)), axis=1)
 
