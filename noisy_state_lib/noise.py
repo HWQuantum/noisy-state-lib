@@ -13,8 +13,9 @@ def mixed_noise_state(rho, p):
 
 
 @njit
-def add_crosstalk(rho, sigma, amplitude):
-    """Add crosstalk between the modes of rho, parameterised by sigma and amplitude
+def add_incoherent_crosstalk(rho, sigma, amplitude):
+    """Add crosstalk between the modes of rho, parameterised by sigma and amplitude.
+    This crosstalk is incoherent, so only adds to the diagonal of the coincidence matrix
     """
     if sigma == 0:
         return rho.copy() / np.trace(rho)
@@ -25,8 +26,30 @@ def add_crosstalk(rho, sigma, amplitude):
         for j in range(dim):
             for k in range(dim):
                 dist_sq = (i - k)**2 + (j - k)**2
-                new_arr[i, j] += rho[k*dim+k, k*dim+k] * np.exp(-dist_sq / (2 * sigma**2))
+                new_arr[i, j] += rho[k * dim + k, k * dim + k] * np.exp(
+                    -dist_sq / (2 * sigma**2))
     new_rho = rho.copy()
     for i in range(dim**2):
-        new_rho[i, i] += new_arr[i//dim, i%dim] * amplitude
+        new_rho[i, i] += new_arr[i // dim, i % dim] * amplitude
+    return new_rho / np.trace(new_rho)
+
+
+@njit
+def add_coherent_crosstalk(rho, sigma, amplitude):
+    """Add coherent crosstalk between the modes of rho, parameterised by sigma and amplitude.
+    This crosstalk is coherent, so is derived from the outer product of vectors.
+    """
+    if sigma == 0:
+        return rho.copy() / np.trace(rho)
+    dim = int(np.rint(np.sqrt(rho.shape[0])))
+    d_lim = dim // 2
+    new_arr = np.zeros((dim, dim))
+    for i in range(dim):
+        for j in range(dim):
+            for k in range(dim):
+                dist_sq = (i - k)**2 + (j - k)**2
+                new_arr[i, j] += np.sqrt(rho[k * dim + k, k * dim + k] *
+                                         np.exp(-dist_sq / (2 * sigma**2)))
+    crosstalk_vec = new_arr.reshape((dim**2, 1))
+    new_rho = rho + np.outer(crosstalk_vec, crosstalk_vec.conj()) * amplitude
     return new_rho / np.trace(new_rho)
