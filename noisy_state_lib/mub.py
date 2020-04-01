@@ -38,7 +38,7 @@ def dual_transform(dim, mub):
     MUB to MUB mub
     """
     m = transform_matrix(dim, mub)
-    return np.kron(m, m)
+    return np.kron(m, m.conj())
 
 
 def correct_parity(coinc):
