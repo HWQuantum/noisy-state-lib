@@ -53,3 +53,16 @@ def add_coherent_crosstalk(rho, sigma, amplitude):
     crosstalk_vec = new_arr.reshape((dim**2, 1))
     new_rho = rho + np.outer(crosstalk_vec, crosstalk_vec.conj()) * amplitude
     return new_rho / np.trace(new_rho)
+
+if __name__ == '__main__':
+    # Looking at crosstalk stuff
+    dim = 11
+    rho = n_particle_spiral_rho_reduced(dim, 5)
+    rho_c = add_coherent_crosstalk(rho, 0.6, 2)
+
+    # plt.imshow(np.abs(rho_c.diagonal().reshape((dim, dim))))
+    t = dual_transform(dim, 1)
+    rho_c_trans = t@rho_c@(t.conj().T)
+    plt.imshow(np.abs(correct_parity(rho_c_trans.diagonal().reshape((dim, dim)))))
+    # plt.imshow(np.abs(rho_c))
+    plt.show()
