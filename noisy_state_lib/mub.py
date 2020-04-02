@@ -2,6 +2,8 @@
 """
 
 import numpy as np
+from .noise import mixed_noise_state
+from .spiral_state import n_particle_spiral_rho_reduced
 
 
 def basis(dim, a, n):
@@ -60,13 +62,14 @@ def coincidences_vec(d, width, p):
         else:
             p = np.array([p])
 
-    coincidences = np.zeros((len(width), len(p), 2, d, d))
+    coincidences = np.zeros((len(width), len(p), 2, d, d), dtype=np.complex128)
 
     for i, w in enumerate(width):
         for j, prob in enumerate(p):
-            comp = isotropic_state(density_matrix(d, w), prob)
+            comp = mixed_noise_state(n_particle_spiral_rho_reduced(d, w), prob)
             coincidences[i, j, 0] = comp.diagonal().reshape((d, d))
-            coincidences[i, j, 1] = correct_parity(
-                (mub_t[0] @ comp @ mub_t[1]).diagonal().reshape((d, d)))
+            coincidences[i, j,
+                         1] = (mub_t[0] @ comp @ mub_t[1]).diagonal().reshape(
+                             (d, d))
 
     return np.abs(coincidences)
