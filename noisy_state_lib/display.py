@@ -2,6 +2,7 @@
 """
 
 import numpy as np
+from matplotlib.colors import hsv_to_rgb
 
 def colourise(a):
     """Turn an array a with dimensions d into an HSV array
