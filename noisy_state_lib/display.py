@@ -1,6 +1,8 @@
 """Contains functions to help displaying states
 """
 
+import numpy as np
+
 def colourise(a):
     """Turn an array a with dimensions d into an HSV array
 
