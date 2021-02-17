@@ -92,6 +92,5 @@ def bloch_sphere_representation(state: np.ndarray) -> (float, float):
     """
     theta = 2 * np.arccos(state[0])
     s_t = np.sin(theta/2)
-    print(state[1]/s_t)
     phi = 0.0 if np.isclose(s_t, 0) else np.angle(state[1]/s_t)
     return (np.real(theta), np.real(phi))
