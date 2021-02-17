@@ -80,3 +80,18 @@ def s(a_0, a_1, b_0, b_1, d):
                      p_mult(a_1, b_1, -k - 1, d) + p_mult(a_0, b_1, k + 1, d)))
                    for k in range(int(d / 2))],
                   axis=0)
+
+def bloch_sphere_representation(state: np.ndarray) -> (float, float):
+    """Get the (θ, φ) in the bloch sphere of the given 2-dimensional state
+    
+    Args:
+        state: The 2-dimensional state
+    
+    Returns:
+        (float, float): A tuple of  (θ, φ)
+    """
+    theta = 2 * np.arccos(state[0])
+    s_t = np.sin(theta/2)
+    print(state[1]/s_t)
+    phi = 0.0 if np.isclose(s_t, 0) else np.angle(state[1]/s_t)
+    return (np.real(theta), np.real(phi))
