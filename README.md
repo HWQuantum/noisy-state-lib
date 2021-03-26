@@ -11,7 +11,7 @@ Make sure you give the proper revision to the rev variable in fetchGit.
 ```nix
 let
   pkgs = import <nixpkgs> {};
-  mode_sorting = with pkgs;
+  nslib = with pkgs;
     python3.pkgs.buildPythonPackage rec {
       pname = "noisy-state-lib";
       version = "0.0.1";
@@ -28,7 +28,7 @@ with pkgs;
 mkShell {
   name = "import_packages";
   buildInputs = [
-    (python3.withPackages (ps: with ps; [mode_sorting numpy]))
+    (python3.withPackages (ps: with ps; [nslib numpy]))
   ];
 }
 ```
