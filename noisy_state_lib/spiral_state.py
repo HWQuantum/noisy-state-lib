@@ -2,9 +2,10 @@
 """
 
 import numpy as np
+from typing import Union, Callable, Sequence
 
 
-def spiral_rho(d, sigma):
+def spiral_rho(d: int, sigma: float) -> np.ndarray:
     """Generate a normalised spiral density matrix with gaussian width sigma and dimension d
     """
     d_lim = d // 2
@@ -12,24 +13,32 @@ def spiral_rho(d, sigma):
     return rho / rho.diagonal().sum()
 
 
-def _n_particle_func(reducing_func, d, sigma, N=2):
+def _n_particle_func(reducing_func: Callable[[np.ndarray, np.ndarray],
+                                             np.ndarray],
+                     d: int,
+                     sigma: Union[Sequence[float], float],
+                     N=2) -> np.ndarray:
     """Helper function for the n_particle functions
     helps with code reuse
     """
-    if isinstance(sigma, (list, tuple)):
+    if isinstance(sigma, Sequence):
         if len(sigma) > 0:
             rho = spiral_rho(d, sigma[0])
             for s in sigma[1:]:
                 rho = reducing_func(rho, spiral_rho(d, s))
             return rho
+        else:
+            raise ValueError("Sigma doesn't have any elements")
     else:
         rho = spiral_rho(d, sigma)
-        for i in range(N - 1):
+        for _ in range(N - 1):
             rho = reducing_func(rho, spiral_rho(d, sigma))
         return rho
 
 
-def n_particle_spiral_rho(d, sigma, N=2):
+def n_particle_spiral_rho(d: int,
+                          sigma: Union[Sequence[float], float],
+                          N=2) -> np.ndarray:
     """Generate an n-particle density matrix.
     d is the dimension of each particle
     if sigma is a number then it generates a two particle state where each particle 
@@ -46,7 +55,9 @@ def n_particle_spiral_rho(d, sigma, N=2):
                             N)
 
 
-def n_particle_spiral_rho_reduced(d, sigma, N=2):
+def n_particle_spiral_rho_reduced(d: int,
+                                  sigma: Union[Sequence[float], float],
+                                  N: int = 2) -> np.ndarray:
     """Generate an n-particle density matrix.
     d is the dimension of each particle
     if sigma is a number then it generates a two particle state where each particle 
