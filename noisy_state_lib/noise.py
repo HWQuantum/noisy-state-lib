@@ -5,7 +5,7 @@ import numpy as np
 from numba import njit
 
 
-def mixed_noise_state(rho, p):
+def mixed_noise_state(rho: np.ndarray, p: float) -> np.ndarray:
     """Make a noisy state from rho, with noise parameter p
     """
     d = rho.shape[0]
@@ -13,14 +13,14 @@ def mixed_noise_state(rho, p):
 
 
 @njit
-def add_incoherent_crosstalk(rho, sigma, amplitude):
+def add_incoherent_crosstalk(rho: np.ndarray, sigma: float,
+                             amplitude: float) -> np.ndarray:
     """Add crosstalk between the modes of rho, parameterised by sigma and amplitude.
     This crosstalk is incoherent, so only adds to the diagonal of the coincidence matrix
     """
     if sigma == 0:
         return rho.copy() / np.trace(rho)
     dim = int(np.rint(np.sqrt(rho.shape[0])))
-    d_lim = dim // 2
     new_arr = np.zeros((dim, dim))
     for i in range(dim):
         for j in range(dim):
@@ -35,14 +35,14 @@ def add_incoherent_crosstalk(rho, sigma, amplitude):
 
 
 @njit
-def add_coherent_crosstalk(rho, sigma, amplitude):
+def add_coherent_crosstalk(rho: np.ndarray, sigma: float,
+                           amplitude: float) -> np.ndarray:
     """Add coherent crosstalk between the modes of rho, parameterised by sigma and amplitude.
     This crosstalk is coherent, so is derived from the outer product of vectors.
     """
     if sigma == 0:
         return rho.copy() / np.trace(rho)
     dim = int(np.rint(np.sqrt(rho.shape[0])))
-    d_lim = dim // 2
     new_arr = np.zeros((dim, dim))
     for i in range(dim):
         for j in range(dim):
