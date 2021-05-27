@@ -4,7 +4,8 @@
 import numpy as np
 from matplotlib.colors import hsv_to_rgb
 
-def colourise(a):
+
+def colourise(a: np.ndarray) -> np.ndarray:
     """Turn an array a with dimensions d into an HSV array
 
     Args:
@@ -20,7 +21,7 @@ def colourise(a):
         return (v - min_v) * ratio + min_o
 
     abs_a = np.abs(a).astype(np.float64)
-    
+
     return hsv_to_rgb(
         np.moveaxis(
             np.array([
