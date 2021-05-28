@@ -1,12 +1,13 @@
 """Contains functions to do with MUBs, like generating bases and taking measurements
 """
 
+from typing import List, Union, cast
 import numpy as np
 from .noise import mixed_noise_state
 from .spiral_state import n_particle_spiral_rho_reduced
 
 
-def basis(dim, a, n):
+def basis(dim: int, a: int, n: int) -> np.ndarray:
     """Generate the basis vectors of the mutually unbiased bases in dim = 2j+1
     dimensions
     The index a ∈ (0, 2j+1) (dim+1 bases) denotes which MUB the vector is drawn from
@@ -28,14 +29,14 @@ def basis(dim, a, n):
                                            dtype=np.complex128)
 
 
-def transform_matrix(dim, mub):
+def transform_matrix(dim: int, mub: int) -> np.ndarray:
     """Generate the transformation matrix from computational MUB 
     to MUB=mub
     """
     return np.array([basis(dim, mub, i) for i in range(dim)]).T
 
 
-def dual_transform(dim, mub):
+def dual_transform(dim: int, mub: int) -> np.ndarray:
     """Generate the transformation matrix to move two particles from the computational
     MUB to MUB mub
     """
@@ -43,7 +44,8 @@ def dual_transform(dim, mub):
     return np.kron(m, m.conj())
 
 
-def coincidences_vec(d, width, p):
+def coincidences_vec(d: int, width: Union[float, List[float], np.ndarray],
+                     p: Union[float, List[float], np.ndarray]) -> np.ndarray:
     """Get the coincidence matrices in MUB 0 and MUB 1 for the values
     of d, width and werner state p
     returns a matrix [width [p [MUB0, MUB1]]]
@@ -61,6 +63,8 @@ def coincidences_vec(d, width, p):
             p = np.array(p)
         else:
             p = np.array([p])
+    width = cast(np.ndarray, width)
+    p = cast(np.ndarray, p)
 
     coincidences = np.zeros((len(width), len(p), 2, d, d), dtype=np.complex128)
 
