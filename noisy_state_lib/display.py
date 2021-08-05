@@ -14,7 +14,8 @@ def colourise(a: np.ndarray) -> np.ndarray:
     Returns:
         np.ndarray: The coloured array, ready to display with matplotlib
     """
-    def map_value(v, min_v, max_v, min_o, max_o):
+    def map_value(v: float, min_v: float, max_v: float, min_o: float,
+                  max_o: float) -> float:
         """Map the values v from the initial min and max vs to min and max os
         """
         ratio = (max_o - min_o) / (max_v - min_v)
