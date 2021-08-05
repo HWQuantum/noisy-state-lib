@@ -5,6 +5,25 @@ import numpy as np
 from typing import Tuple
 
 
+def null_space(m: np.ndarray) -> np.ndarray:
+    """Find the null space of the matrix m
+    """
+    u, e, v = np.linalg.svd(m, full_matrices=True)
+    rows, cols = u.shape[0], v.shape[1]
+    rcond = np.finfo(e.dtype).eps * max(rows, cols)
+    tolerance = np.amax(e) * rcond
+    num = np.sum(e > tolerance, dtype=int)
+    Q = v[num:, :].T.conj()
+    return Q
+
+
+def theta_from_fidelity(fidelity: float, dimension: int) -> float:
+    """Get the corresponding theta from the given fidelity
+    """
+    return np.arccos(
+        np.sqrt((np.sqrt(fidelity) * (dimension - 1) + 1) / (dimension)))
+
+
 def symmetric_states(theta: float, d: int) -> np.ndarray:
     """Generate d symmetric overlap states in d dimensions, with parameter theta controlling the overlap
 
@@ -126,3 +145,13 @@ def get_transformation_states(theta: float,
         (np.abs(cross_mat)**2).sum(axis=1),
         np.ones(d))), "Overlap isn't correct. Try a smaller angle"
     return s_expanded, cross_mat
+
+
+def get_state_discrimination_unitary(initial_states: np.ndarray,
+                                     final_states: np.ndarray) -> np.ndarray:
+    """Get the unitary matrix that transforms the initial states into the final states
+    """
+    u = (final_states.T.conj()) @ np.linalg.pinv(initial_states.T.conj())
+    u[:, -1] = null_space(u.T)[:, 0]
+    assert np.allclose(u @ initial_states.T.conj() - final_states.T, 0)
+    return u
