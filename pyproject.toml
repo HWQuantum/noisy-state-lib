@@ -1,0 +1,17 @@
+[tool.poetry]
+name = "noisy-state-lib"
+version = "0.1.0"
+description = ""
+authors = ["Max Tyler <maxastyler@gmail.com>"]
+readme = "README.md"
+packages = [{include = "noisy_state_lib"}]
+
+[tool.poetry.dependencies]
+python = "^3.9,<3.12"
+numpy = "^1.26.2"
+numba = "^0.58.1"
+matplotlib = "^3.8.2"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
