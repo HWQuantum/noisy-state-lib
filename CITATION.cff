@@ -1,0 +1,21 @@
+# This CITATION.cff file was generated with cffinit.
+# Visit https://bit.ly/cffinit to generate yours today!
+
+cff-version: 1.2.0
+title: noisy-state-lib
+message: >-
+  If you use this software, please cite it using the
+  metadata from this file.
+type: software
+authors:
+  - given-names: Max
+    family-names: Tyler
+    affiliation: Heriot Watt University
+repository-code: 'https://github.com/HWQuantum/noisy-state-lib'
+abstract: A library for generating and analysing quantum states.
+keywords:
+  - quantum
+  - python
+  - state
+license: GPL-3.0
+commit: 7d6ae65d4fbd45841d98f05c1b537b57e94f4bd0
